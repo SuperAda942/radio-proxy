@@ -5,6 +5,12 @@ const express = require('express');
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS');
+  next();
+});
 
 function getStream(url, res) {
 
@@ -155,7 +161,7 @@ try {
               const absoluteUrl =
                   new URL(match, baseUrl).href;
 
-              return '/hls?url=' +
+              return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
                   encodeURIComponent(absoluteUrl);
 
           }
@@ -168,7 +174,7 @@ try {
               const absoluteUrl =
                   new URL(match, baseUrl).href;
 
-              return '/hls?url=' +
+              return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
                   encodeURIComponent(absoluteUrl);
 
           }

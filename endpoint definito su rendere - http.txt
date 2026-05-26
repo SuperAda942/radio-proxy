@@ -1,0 +1,9 @@
+endpoint definito su render -> https://radio-proxy-e7an.onrender.com
+
+esempio
+
+https://radio-proxy-e7an.onrender.com?url=https://chino.republicahosting.com:2316/live
+
+su GitHub in pratica bisogna sempre aggiornare i file server.js e package.json
+andare su GitHub -> selezionare radio-proxy -> cliccare sul file -> cliccare su edit -> modificare il file ->cliccare poi su Commit Changes
+andare su render.com -> dashboard -> all services -> Manual Deploy → Deploy latest commit

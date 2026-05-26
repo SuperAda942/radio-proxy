@@ -120,8 +120,13 @@ try {
 
     client.get(streamUrl, (response) => {
 
+        const contentType =
+            response.headers['content-type'] || '';
+        
         const isManifest =
-        streamUrl.includes('.m3u8');
+            streamUrl.includes('.m3u8') ||
+            contentType.includes('mpegurl') ||
+            contentType.includes('application/vnd.apple.mpegurl');
 
   if (!isManifest) {
 

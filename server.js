@@ -160,7 +160,7 @@ try {
           );
 
       data = data.replace(
-          /^(?!#)(.+\.m3u8.*)$/gm,
+          /^([^#].*\.m3u8.*)$/gm,
           (match) => {
 
               const absoluteUrl =
@@ -173,7 +173,7 @@ try {
       );
 
       data = data.replace(
-          /^(?!#)(.+\.(ts|aac|mp3).*)$/gm,
+          /^([^#].*\.(ts|aac|mp3).*)$/gm,
           (match) => {
 
               const absoluteUrl =

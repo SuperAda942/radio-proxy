@@ -160,31 +160,18 @@ try {
           );
 
       data = data.replace(
-          /^([^#].*\.m3u8.*)$/gm,
-          (match) => {
-
-              const absoluteUrl =
-                  new URL(match, baseUrl).href;
-
-              return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
-                  encodeURIComponent(absoluteUrl);
-
-          }
-      );
-
-      data = data.replace(
-          /^([^#].*\.(ts|aac|mp3).*)$/gm,
-          (match) => {
-
-              const absoluteUrl =
-                  new URL(match, baseUrl).href;
-
-              return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
-                  encodeURIComponent(absoluteUrl);
-
-          }
-      );
-
+      /^(?!#)(.+)$/gm,
+      (match) => {
+  
+          const absoluteUrl =
+              new URL(match, baseUrl).href;
+  
+          return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
+              encodeURIComponent(absoluteUrl);
+  
+      }
+  );
+    
       res.setHeader(
           'Content-Type',
           'application/vnd.apple.mpegurl'

@@ -29,13 +29,6 @@ function getStream(url, res) {
   
     stream.setTimeout(30000);
 
-    /*
-    stream.on('timeout', () => {
-      console.log("STREAM TIMEOUT");
-      stream.destroy();
-    });
-    */
-
     // 🔁 FOLLOW REDIRECT
     if (stream.statusCode >= 300 && stream.statusCode < 400 && stream.headers.location) {
       console.log("Redirect to:", stream.headers.location);
@@ -102,10 +95,53 @@ app.get('/', (req, res) => {
 
 app.get('/hls', async (req, res) => {
 
-const streamUrl = req.query.url;
+let streamUrl = req.query.url;
 
 if (!streamUrl) {
     return res.status(400).send('Missing url');
+}
+
+if (streamUrl.toLowerCase().includes('.pls')) {
+
+    console.log("PLS DETECTED");
+
+    const client = streamUrl.startsWith('https')
+        ? https
+        : http;
+
+    await new Promise((resolve, reject) => {
+
+        client.get(streamUrl, (plsResponse) => {
+
+            let plsData = '';
+
+            plsResponse.on('data', chunk => {
+                plsData += chunk;
+            });
+
+            plsResponse.on('end', () => {
+
+                const match =
+                    plsData.match(/File1=(.+)/i);
+
+                if (match && match[1]) {
+
+                    streamUrl = match[1].trim();
+
+                    console.log(
+                        "PLS STREAM:",
+                        streamUrl
+                    );
+                }
+
+                resolve();
+
+            });
+
+        }).on('error', reject);
+
+    });
+
 }
 
 console.log("HLS REQUEST:", streamUrl);
@@ -120,13 +156,13 @@ try {
 
     client.get(streamUrl, (response) => {
 
-        const contentType =
-            response.headers['content-type'] || '';
-        
-        const isManifest =
-            streamUrl.includes('.m3u8') ||
-            contentType.includes('mpegurl') ||
-            contentType.includes('application/vnd.apple.mpegurl');
+      const contentType =
+          response.headers['content-type'] || '';
+
+      const isManifest =
+          streamUrl.includes('.m3u8') ||
+          contentType.includes('mpegurl') ||
+          contentType.includes('application/vnd.apple.mpegurl');
 
   if (!isManifest) {
 
@@ -160,18 +196,18 @@ try {
           );
 
       data = data.replace(
-      /^(?!#)(.+)$/gm,
-      (match) => {
-  
-          const absoluteUrl =
-              new URL(match, baseUrl).href;
-  
-          return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
-              encodeURIComponent(absoluteUrl);
-  
-      }
-  );
-    
+          /^(?!#)(.+)$/gm,
+          (match) => {
+
+              const absoluteUrl =
+                  new URL(match, baseUrl).href;
+
+              return 'https://radio-proxy-e7an.onrender.com/hls?url=' +
+                  encodeURIComponent(absoluteUrl);
+
+          }
+      );
+
       res.setHeader(
           'Content-Type',
           'application/vnd.apple.mpegurl'

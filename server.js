@@ -156,6 +156,24 @@ try {
 
     client.get(streamUrl, (response) => {
 
+    // 🔥 FOLLOW REDIRECT HLS
+    if (
+        response.statusCode >= 300 &&
+        response.statusCode < 400 &&
+        response.headers.location
+    ) {
+    
+        console.log(
+            "HLS REDIRECT:",
+            response.headers.location
+        );
+    
+        return res.redirect(
+            '/hls?url=' +
+            encodeURIComponent(response.headers.location)
+        );
+    }
+      
       const contentType =
           response.headers['content-type'] || '';
 

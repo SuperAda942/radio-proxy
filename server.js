@@ -301,6 +301,30 @@ app.post('/push/send', async (req, res) => {
 
     }
 
+    try {
+
+        await webpush.sendNotification(
+
+            {
+                endpoint: endpoint,
+                keys: {
+                    p256dh: p256dh,
+                    auth: auth
+                }
+            },
+
+            JSON.stringify(payload)
+
+        );
+
+        console.log("PUSH SENT");
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
     res.json({
         success: true
     });

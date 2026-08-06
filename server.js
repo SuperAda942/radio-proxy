@@ -283,7 +283,23 @@ app.post('/push/send', async (req, res) => {
     console.log("VAPID PUBLIC:", !!process.env.VAPID_PUBLIC_KEY);
     console.log("VAPID PRIVATE:", !!process.env.VAPID_PRIVATE_KEY);
 
-    console.log(req.body);
+    console.log(JSON.stringify(req.body, null, 2));
+
+    const {
+    endpoint,
+    p256dh,
+    auth,
+    payload
+    } = req.body;
+
+    if (!endpoint || !p256dh || !auth || !payload) {
+
+        return res.status(400).json({
+            success: false,
+            error: "Missing parameters"
+        });
+
+    }
 
     res.json({
         success: true

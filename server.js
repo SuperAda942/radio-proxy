@@ -2,6 +2,7 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const webpush = require('web-push');
 
 const app = express();
 
@@ -10,6 +11,16 @@ const app = express();
 // =====================================================
 
 app.use(express.json({ limit: '100kb' }));
+
+// =====================================================
+// VAPID
+// =====================================================
+
+webpush.setVapidDetails(
+    'mailto:info@iradiostream.com',
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+);
 
 
 app.use((req, res, next) => {
@@ -268,6 +279,9 @@ try {
 app.post('/push/send', async (req, res) => {
 
     console.log("PUSH REQUEST");
+
+    console.log("VAPID PUBLIC:", !!process.env.VAPID_PUBLIC_KEY);
+    console.log("VAPID PRIVATE:", !!process.env.VAPID_PRIVATE_KEY);
 
     console.log(req.body);
 

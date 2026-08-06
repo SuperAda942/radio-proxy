@@ -5,6 +5,13 @@ const express = require('express');
 
 const app = express();
 
+// =====================================================
+// JSON BODY PARSER
+// =====================================================
+
+app.use(express.json({ limit: '100kb' }));
+
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
@@ -156,24 +163,24 @@ try {
 
     client.get(streamUrl, (response) => {
 
-    // 🔥 FOLLOW REDIRECT HLS
+        // 🔥 FOLLOW REDIRECT HLS
     if (
         response.statusCode >= 300 &&
         response.statusCode < 400 &&
         response.headers.location
     ) {
-    
+
         console.log(
             "HLS REDIRECT:",
             response.headers.location
         );
-    
+
         return res.redirect(
             '/hls?url=' +
             encodeURIComponent(response.headers.location)
         );
     }
-      
+
       const contentType =
           response.headers['content-type'] || '';
 
@@ -252,6 +259,24 @@ try {
 }
 
 });
+
+
+// =====================================================
+// PUSH TEST
+// =====================================================
+
+app.post('/push/send', async (req, res) => {
+
+    console.log("PUSH REQUEST");
+
+    console.log(req.body);
+
+    res.json({
+        success: true
+    });
+
+});
+
 
 app.listen(3000, () => {
   console.log("Proxy running on port 3000");

@@ -303,6 +303,21 @@ app.post('/push/send', async (req, res) => {
 
     try {
 
+        console.log("======================================");
+        console.log("SUBSCRIPTION");
+        console.log(JSON.stringify({
+            endpoint: endpoint,
+            keys: {
+                p256dh: p256dh,
+                auth: auth
+            }
+        }, null, 2));
+
+        console.log("======================================");
+        console.log("PAYLOAD");
+        console.log(JSON.stringify(payload, null, 2));
+        console.log("======================================");
+
         await webpush.sendNotification(
 
             {
